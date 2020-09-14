@@ -3,12 +3,13 @@ package com.example.exceldemo;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelStyleType;
+import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import com.example.exceldemo.entity.Datas;
 import com.google.common.collect.Lists;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFChart;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -80,31 +81,41 @@ class ExcelDemoApplicationTests {
         map.put("machine", "武汉基深");
         map.put("times", 100);
         map.put("project", "土体侧向位移");
-        map.put("tablename","土体侧向位移监测成果表");
-        map.put("username1","黄斌");
-        map.put("username2","黄斌");
-        map.put("username3","黄斌");
-        map.put("other","大大方方烦烦烦不方便很讨dfadfdfadsf");
-        map.put("end","dfadfasd大噶啊啊v觉哦i给你发了白马非马不来了");
-        map.put("status","打飞机拉萨大家辣椒辣女哦人能够让老师的");
+        map.put("tablename", "土体侧向位移监测成果表");
+        map.put("username1", "黄斌");
+        map.put("username2", "黄斌");
+        map.put("username3", "黄斌");
+        map.put("other", "大大方方烦烦烦不方便很讨dfadfdfadsf");
+        map.put("end", "dfadfasd大噶啊啊v觉哦i给你发了白马非马不来了");
+        map.put("status", "打飞机拉萨大家辣椒辣女哦人能够让老师的");
         List<Datas> list = new ArrayList<Datas>();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 10; i++) {
             Datas entity = new Datas();
-            entity.setDeep(10);
-            entity.setChange(20);
-            entity.setSpeed(30);
-            entity.setAddupchange(40);
+            entity.setDeep(i/2 + 0.8);
+            entity.setChange(i/4 + 0.8);
+            entity.setSpeed(i/6 + 0.8);
+            entity.setAddupchange(i/8 + 0.8);
+            entity.setTest("");
             list.add(entity);
         }
 
         map.put("maplist", list);
+
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         File savefile = new File("D:/home/excel/");
+        //workbook.getSheet("成果表").addMergedRegion(new CellRangeAddress(3, 13, 4, 10));
+        //PoiMergeCellUtil.mergeCells(workbook.getSheet("成果表"), 4, 4);
+        CellRangeAddress cellRangePlanNo = new CellRangeAddress(3, 13, 4, 10);
+        workbook.getSheet("成果表").addMergedRegion(cellRangePlanNo);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, cellRangePlanNo, workbook.getSheet("成果表"));
+        RegionUtil.setBorderLeft(BorderStyle.THIN, cellRangePlanNo, workbook.getSheet("成果表"));
+        RegionUtil.setBorderRight(BorderStyle.THIN, cellRangePlanNo, workbook.getSheet("成果表"));
+        RegionUtil.setBorderTop(BorderStyle.THIN, cellRangePlanNo, workbook.getSheet("成果表"));
         if (!savefile.exists()) {
             savefile.mkdirs();
         }
-        FileOutputStream fos = new FileOutputStream("D:/home/excel/333.xlsx");
+        FileOutputStream fos = new FileOutputStream("D:/home/excel/555.xlsx");
         workbook.write(fos);
         fos.close();
     }

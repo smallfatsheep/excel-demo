@@ -23,4 +23,6 @@ public class Datas {
     private double speed;
     //@Excel(name = "累计变化(mm)",needMerge = true)
     private double addupchange;
+    private String test;
+
 }
