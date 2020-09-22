@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 /**
  * @Author: huangwc
  * @Description:
@@ -14,15 +16,14 @@ import lombok.Setter;
 @Setter
 @Getter
 @Data
-public class Datas {
-    //@Excel(name = "深度  （m）" ,needMerge = true)
+public class Datas implements Serializable {
+    @Excel(name = "深度  （m）", needMerge = true)
     private double deep;
-    //@Excel(name = "本次变化（mm）",needMerge = true)
+    @Excel(name = "本次变化（mm）", needMerge = true)
     private double change;
-    //@Excel(name = "本次速率(mm/d)",needMerge = true)
+    @Excel(name = "本次速率(mm/d)",needMerge = true)
     private double speed;
-    //@Excel(name = "累计变化(mm)",needMerge = true)
+    @Excel(name = "累计变化(mm)",needMerge = true)
     private double addupchange;
-    private String test;
 
 }

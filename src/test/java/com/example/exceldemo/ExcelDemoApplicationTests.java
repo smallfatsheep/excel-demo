@@ -5,6 +5,7 @@ import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelStyleType;
 import cn.afterturn.easypoi.util.PoiMergeCellUtil;
 import com.example.exceldemo.entity.Datas;
+import com.example.exceldemo.entity.UserEntity;
 import com.google.common.collect.Lists;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.*;
@@ -36,7 +37,7 @@ class ExcelDemoApplicationTests {
     @Test
     public void test() throws IOException {
         TemplateExportParams params = new TemplateExportParams(
-                "D://home/excel/test.xls");
+                "D://home/excel/test.xlsx");
         params.setSheetName(new String[]{"祈福"});
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("date", new Date());
@@ -90,15 +91,15 @@ class ExcelDemoApplicationTests {
         map.put("status", "打飞机拉萨大家辣椒辣女哦人能够让老师的");
         List<Datas> list = new ArrayList<Datas>();
 
-        for (int i = 0; i < 10; i++) {
-            Datas entity = new Datas();
-            entity.setDeep(i/2 + 0.8);
-            entity.setChange(i/4 + 0.8);
-            entity.setSpeed(i/6 + 0.8);
-            entity.setAddupchange(i/8 + 0.8);
-            entity.setTest("");
-            list.add(entity);
-        }
+//        for (int i = 0; i < 10; i++) {
+//            Datas entity = new Datas();
+//            entity.setDeep(i/2 + 0.8);
+//            entity.setChange(i/4 + 0.8);
+//            entity.setSpeed(i/6 + 0.8);
+//            entity.setAddupchange(i/8 + 0.8);
+//            entity.setTest("");
+//            list.add(entity);
+//        }
 
         map.put("maplist", list);
 
@@ -115,218 +116,137 @@ class ExcelDemoApplicationTests {
         if (!savefile.exists()) {
             savefile.mkdirs();
         }
+        /*在创建TemplateExportParams模版对象时，若需要输出多sheet的话，
+        需要在指定模版路径后，追加一个参数，
+        默认值为false，设置为true即表示会输出模版中的全部sheet，否则只会输出第一个sheet*/
         FileOutputStream fos = new FileOutputStream("D:/home/excel/555.xlsx");
         workbook.write(fos);
         fos.close();
     }
-    @Test
-    public void createScatterChart() throws IOException {
-        XSSFWorkbook wb = new XSSFWorkbook();
-        XSSFSheet sheet = wb.createSheet("散点图");
 
-        Row row;
-        Cell cell;
-        for (int r = 0; r < 105; r++) {
-            row = sheet.createRow(r);
-            cell = row.createCell(0);
-            cell.setCellValue("S" + r);
-            cell = row.createCell(1);
-            cell.setCellValue(100);
+
+    @Test
+    public void one() throws Exception {
+        TemplateExportParams params = new TemplateExportParams(
+                "D://home/excel/for_Col.xlsx",2,1);
+        params.setColForEach(true);
+        params.setSheetName(new String[]{"sheet_1","sheet_2"});
+        Map<String, Object> value = new HashMap<String, Object>();
+        List<Map<String, Object>> colList = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> colList1 = new ArrayList<Map<String, Object>>();
+
+        //先处理表头
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("name", "第125次");
+        map.put("time", new Date());
+        map.put("zq", "深");
+        map.put("cw", "宽");
+        map.put("tj", "长");
+        map.put("zqmk", "t.zq_xm");
+        map.put("cwmk", "t.cw_xm");
+        map.put("tjmk", "t.tj_xm");
+        colList.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("name", "第126次");
+        map.put("time", new Date());
+        map.put("zq", "深");
+        map.put("cw", "宽");
+        map.put("tj", "长");
+        map.put("zqmk", "t.zq_xh");
+        map.put("cwmk", "t.cw_xh");
+        map.put("tjmk", "t.tj_xh");
+        colList.add(map);
+
+        Map<String, Object> map1 = new HashMap<String, Object>();
+        map1.put("name", "第125次");
+        map1.put("time", new Date());
+        map1.put("zq", "深");
+        map1.put("cw", "宽");
+        map1.put("tj", "长");
+        map1.put("zqmk", "t.zq_xm");
+        map1.put("cwmk", "t.cw_xm");
+        map1.put("tjmk", "t.tj_xm");
+        colList1.add(map1);
+
+
+        value.put("colList", colList);
+        value.put("colList2", colList);
+        value.put("colList3", colList);
+        List<Map<String, Object>> valList = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < 10; i++){
+            map = new HashMap<String, Object>();
+            map.put("one", "基坑顶部");
+            map.put("two", "PO"+(i+1));
+            map.put("zq_xm","zqxm"+i);
+            map.put("cw_xm","cwxm"+i);
+            map.put("tj_xm","tjxm"+i);
+            map.put("zq_xh","zqxh"+i);
+            map.put("cw_xh","cwxh"+i);
+            map.put("tj_xh","tjxh"+i);
+            valList.add(map);
         }
 
-        XSSFDrawing drawing = sheet.createDrawingPatriarch();
-        ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 0, 21, 40);
 
-        XSSFChart chart = drawing.createChart(anchor);
-
-        chart.setTitleText("预选赛项目得分分布图");
-        chart.setAutoTitleDeleted(false);
-
-        CTChart ctChart = chart.getCTChart();
-        ctChart.addNewPlotVisOnly().setVal(true);
-        ctChart.addNewDispBlanksAs().setVal(STDispBlanksAs.Enum.forInt(2));
-        ctChart.addNewShowDLblsOverMax().setVal(false);
-
-        // 创建一个散点图
-        CTPlotArea ctPlotArea = ctChart.getPlotArea();
-
-        CTScatterChart scatterChart = ctPlotArea.addNewScatterChart();
-        scatterChart.addNewScatterStyle().setVal(STScatterStyle.LINE_MARKER);
-        scatterChart.addNewVaryColors().setVal(false); // 不允许自定义颜色
-        scatterChart.addNewAxId().setVal(123456);
-        scatterChart.addNewAxId().setVal(123457);
-
-        CTCatAx ctCatAx = ctPlotArea.addNewCatAx();
-        ctCatAx.addNewAxId().setVal(123456);
-        CTScaling ctScaling = ctCatAx.addNewScaling();
-        ctScaling.addNewOrientation().setVal(MIN_MAX);
-        ctCatAx.addNewDelete().setVal(false);
-        ctCatAx.addNewAxPos().setVal(STAxPos.B);
-        ctCatAx.addNewCrossAx().setVal(123457);
-        ctCatAx.addNewTickLblPos().setVal(NEXT_TO);
-
-        // 设置Y坐标
-        CTValAx ctValAx = ctPlotArea.addNewValAx();
-        ctValAx.addNewAxId().setVal(123457);
-        CTScaling ctScaling1 = ctValAx.addNewScaling();
-        ctScaling1.addNewOrientation().setVal(MIN_MAX);
-        ctValAx.addNewDelete().setVal(false);
-        ctValAx.addNewAxPos().setVal(STAxPos.B);
-        ctValAx.addNewCrossAx().setVal(123456);
-        // Y轴的对比线
-        CTShapeProperties ctShapeProperties = ctValAx.addNewMajorGridlines().addNewSpPr();
-        CTLineProperties ctLineProperties = ctShapeProperties.addNewLn();
-        ctLineProperties.setW(9525);
-        ctLineProperties.setCap(STLineCap.Enum.forInt(3));
-        ctLineProperties.setCmpd(STCompoundLine.Enum.forInt(1));
-        ctLineProperties.setAlgn(STPenAlignment.Enum.forInt(1));
-        // 不显示Y轴上的坐标刻度线
-        ctValAx.addNewMajorTickMark().setVal(STTickMark.NONE);
-        ctValAx.addNewMinorTickMark().setVal(STTickMark.NONE);
-        ctValAx.addNewTickLblPos().setVal(NEXT_TO);
-
-        // 设置散点图内的信息
-        CTScatterSer ctScatterSer = scatterChart.addNewSer();
-        ctScatterSer.addNewIdx().setVal(0);
-        ctScatterSer.addNewOrder().setVal(0);
-        // 去掉连接线
-        ctPlotArea.getScatterChartArray(0).getSerArray(0).addNewSpPr().addNewLn().addNewNoFill();
-
-        // 设置散点图各图例的显示
-        CTDLbls ctdLbls = scatterChart.addNewDLbls();
-        ctdLbls.addNewShowVal().setVal(true);
-        ctdLbls.addNewShowLegendKey().setVal(false);
-        ctdLbls.addNewShowSerName().setVal(false);
-        ctdLbls.addNewShowCatName().setVal(false);
-        ctdLbls.addNewShowPercent().setVal(false);
-        ctdLbls.addNewShowBubbleSize().setVal(false);
-        // 设置标记的样式
-        CTMarker ctMarker = ctScatterSer.addNewMarker();
-        ctMarker.addNewSymbol().setVal(STMarkerStyle.Enum.forInt(3));
-        ctMarker.addNewSize().setVal((short) 5);
-        CTShapeProperties ctShapeProperties1 = ctMarker.addNewSpPr();
-        ctShapeProperties1.addNewSolidFill().addNewSchemeClr().setVal(STSchemeColorVal.Enum.forInt(5));
-        CTLineProperties ctLineProperties1 = ctShapeProperties1.addNewLn();
-        ctLineProperties1.setW(9525);
-        ctLineProperties1.addNewSolidFill().addNewSchemeClr().setVal(STSchemeColorVal.Enum.forInt(5));
-
-        CTAxDataSource ctAxDataSource = ctScatterSer.addNewXVal();
-        CTStrRef ctStrRef = ctAxDataSource.addNewStrRef();
-        ctStrRef.setF("散点图!$A$1:$A$100");
-        CTNumDataSource ctNumDataSource = ctScatterSer.addNewYVal();
-        CTNumRef ctNumRef = ctNumDataSource.addNewNumRef();
-        ctNumRef.setF("散点图!$B$1:$B$100");
-
-        System.out.println(ctChart);
-
-        FileOutputStream fileOut = new FileOutputStream("D:\\out.xlsx");
-        wb.write(fileOut);
-        fileOut.close();
+        value.put("name", "基坑顶部");
+        value.put("valList", valList);
+        value.put("valList2", valList);
+        value.put("valList3", valList);
+        Workbook book = ExcelExportUtil.exportExcel(params, value);
+        PoiMergeCellUtil.mergeCells(book.getSheetAt(0), 1, 0);
+        PoiMergeCellUtil.mergeCells(book.getSheetAt(1), 1, 0);
+        FileOutputStream fos = new FileOutputStream("D://home/excel/result2.xlsx");
+        book.write(fos);
+        fos.close();
     }
+    @Test
+    public void test2() throws Exception {
 
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<UserEntity> list = new ArrayList<>();
 
-//    @Test
-//    public void createScatterChart() throws IOException {
-//        XSSFWorkbook wb = new XSSFWorkbook();
-//        XSSFSheet sheet = wb.createSheet("散点图");
-//
-//        Row row;
-//        Cell cell;
-//        for (int r = 0; r < 105; r++) {
-//            row = sheet.createRow(r);
-//            cell = row.createCell(0);
-//            cell.setCellValue("S" + r);
-//            cell = row.createCell(1);
-//            cell.setCellValue(RandomUtils.nextInt(1,100));
-//        }
-//
-//        XSSFDrawing drawing = sheet.createDrawingPatriarch();
-//        ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 0, 21, 40);
-//
-//        XSSFChart chart = drawing.createChart(anchor);
-//
-//        chart.setTitleText("预选赛项目得分分布图");
-//        chart.setAutoTitleDeleted(false);
-//
-//        CTChart ctChart = chart.getCTChart();
-//        ctChart.addNewPlotVisOnly().setVal(true);
-//        ctChart.addNewDispBlanksAs().setVal(STDispBlanksAs.Enum.forInt(2));
-//        ctChart.addNewShowDLblsOverMax().setVal(false);
-//
-//        // 创建一个散点图
-//        CTPlotArea ctPlotArea = ctChart.getPlotArea();
-//
-//        CTScatterChart scatterChart = ctPlotArea.addNewScatterChart();
-//        scatterChart.addNewScatterStyle().setVal(STScatterStyle.LINE_MARKER);
-//        scatterChart.addNewVaryColors().setVal(false); // 不允许自定义颜色
-//        scatterChart.addNewAxId().setVal(123456);
-//        scatterChart.addNewAxId().setVal(123457);
-//
-//        CTCatAx ctCatAx = ctPlotArea.addNewCatAx();
-//        ctCatAx.addNewAxId().setVal(123456);
-//        CTScaling ctScaling = ctCatAx.addNewScaling();
-//        ctScaling.addNewOrientation().setVal(MIN_MAX);
-//        ctCatAx.addNewDelete().setVal(false);
-//        ctCatAx.addNewAxPos().setVal(STAxPos.B);
-//        ctCatAx.addNewCrossAx().setVal(123457);
-//        ctCatAx.addNewTickLblPos().setVal(NEXT_TO);
-//
-//        // 设置Y坐标
-//        CTValAx ctValAx = ctPlotArea.addNewValAx();
-//        ctValAx.addNewAxId().setVal(123457);
-//        CTScaling ctScaling1 = ctValAx.addNewScaling();
-//        ctScaling1.addNewOrientation().setVal(MIN_MAX);
-//        ctValAx.addNewDelete().setVal(false);
-//        ctValAx.addNewAxPos().setVal(STAxPos.B);
-//        ctValAx.addNewCrossAx().setVal(123456);
-//        // Y轴的对比线
-//        CTShapeProperties ctShapeProperties = ctValAx.addNewMajorGridlines().addNewSpPr();
-//        CTLineProperties ctLineProperties = ctShapeProperties.addNewLn();
-//        ctLineProperties.setW(9525);
-//        ctLineProperties.setCap(STLineCap.Enum.forInt(3));
-//        ctLineProperties.setCmpd(STCompoundLine.Enum.forInt(1));
-//        ctLineProperties.setAlgn(STPenAlignment.Enum.forInt(1));
-//        // 不显示Y轴上的坐标刻度线
-//        ctValAx.addNewMajorTickMark().setVal(STTickMark.NONE);
-//        ctValAx.addNewMinorTickMark().setVal(STTickMark.NONE);
-//        ctValAx.addNewTickLblPos().setVal(NEXT_TO);
-//
-//        // 设置散点图内的信息
-//        CTScatterSer ctScatterSer = scatterChart.addNewSer();
-//        ctScatterSer.addNewIdx().setVal(0);
-//        ctScatterSer.addNewOrder().setVal(0);
-//        // 去掉连接线
-//        ctPlotArea.getScatterChartArray(0).getSerArray(0).addNewSpPr().addNewLn().addNewNoFill();
-//
-//        // 设置散点图各图例的显示
-//        CTDLbls ctdLbls = scatterChart.addNewDLbls();
-//        ctdLbls.addNewShowVal().setVal(true);
-//        ctdLbls.addNewShowLegendKey().setVal(false);
-//        ctdLbls.addNewShowSerName().setVal(false);
-//        ctdLbls.addNewShowCatName().setVal(false);
-//        ctdLbls.addNewShowPercent().setVal(false);
-//        ctdLbls.addNewShowBubbleSize().setVal(false);
-//        // 设置标记的样式
-//        CTMarker ctMarker = ctScatterSer.addNewMarker();
-//        ctMarker.addNewSymbol().setVal(STMarkerStyle.Enum.forInt(3));
-//        ctMarker.addNewSize().setVal((short) 5);
-//        CTShapeProperties ctShapeProperties1 = ctMarker.addNewSpPr();
-//        ctShapeProperties1.addNewSolidFill().addNewSchemeClr().setVal(STSchemeColorVal.Enum.forInt(5));
-//        CTLineProperties ctLineProperties1 = ctShapeProperties1.addNewLn();
-//        ctLineProperties1.setW(9525);
-//        ctLineProperties1.addNewSolidFill().addNewSchemeClr().setVal(STSchemeColorVal.Enum.forInt(5));
-//
-//        CTAxDataSource ctAxDataSource = ctScatterSer.addNewXVal();
-//        CTStrRef ctStrRef = ctAxDataSource.addNewStrRef();
-//        ctStrRef.setF("散点图!$A$1:$A$100");
-//        CTNumDataSource ctNumDataSource = ctScatterSer.addNewYVal();
-//        CTNumRef ctNumRef = ctNumDataSource.addNewNumRef();
-//        ctNumRef.setF("散点图!$B$1:$B$100");
-//
-//        System.out.println(ctChart);
-//
-//        FileOutputStream fileOut = new FileOutputStream("C:\\Users\\user\\Desktop\\out.xlsx");
-//        wb.write(fileOut);
-//        fileOut.close();
-//    }
+        for (int i = 0; i < 10; i++) {
+            UserEntity entity = new UserEntity();
+            entity.setIdx(i + "");
+            entity.setNativeStr("广东梅州");
+            entity.setUserName("Mrs Ling_" + i);
+            if (i > 4) {
+                entity.setUserName("Mrs Ling");
+                entity.setIdx("5");
+            }
+            entity.setAge(16 + i);
+            entity.setAddr("广东梅州_" + i);
+            list.add(entity);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            UserEntity entity = new UserEntity();
+            entity.setIdx(i + "");
+            entity.setNativeStr("广西玉林");
+            entity.setUserName("Mr Feng_" + i);
+            if (i > 4) {
+                entity.setUserName("Mr Feng");
+                entity.setIdx("5");
+            }
+            entity.setAge(21 + i);
+            entity.setAddr("广西玉林_" + i);
+            list.add(entity);
+        }
+
+        map.put("entityList", list);
+
+        TemplateExportParams params = new TemplateExportParams(
+                "D://home/excel/test3.xlsx");
+        ExcelExportUtil.exportExcel(params, map);
+        Workbook workbook = ExcelExportUtil.exportExcel(params, map);
+
+        PoiMergeCellUtil.mergeCells(workbook.getSheetAt(0), 1, 0, 1,3,2,4);
+        File saveFolder = new File("D:/home/excel/");
+        if (!saveFolder.exists()) {
+            saveFolder.mkdirs();
+        }
+        FileOutputStream fos = new FileOutputStream("D://home/excel/fengling_test_export" + System.currentTimeMillis() + ".xlsx");
+        workbook.write(fos);
+        fos.close();
+    }
 }

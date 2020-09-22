@@ -4,8 +4,6 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.example.exceldemo.entity.Datas;
 import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.BuiltinFormats;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
@@ -22,11 +20,11 @@ import java.util.*;
  * @Version: 1.0
  */
 public class Easypoi {
-    public void easypoi(String filename,Map<String, Object> map) throws IOException {
+    public void easypoi() throws IOException {
         TemplateExportParams params = new TemplateExportParams(
-                filename);
-        //params.setHeadingStartRow(3);
-        //params.setHeadingRows(1);
+                "D://home/excel/test.xlsx");
+        params.setHeadingStartRow(3);
+        params.setHeadingRows(1);
         params.setSheetName(new String[]{"Sheet1"});
         Map<String, Object> map1 = new HashMap<String, Object>();
         map1.put("date", new Date());
@@ -51,27 +49,25 @@ public class Easypoi {
             entity.setChange(i / 4 + 0.8);
             entity.setSpeed(i / 6 + 0.8);
             entity.setAddupchange(i / 8 + 0.8);
-            entity.setTest("");
             list.add(entity);
         }
-
         map1.put("maplist", list);
 
         Workbook workbook = ExcelExportUtil.exportExcel(params, map1);
         File savefile = new File("D:/home/excel/");
         //workbook.getSheet("成果表").addMergedRegion(new CellRangeAddress(3, 13, 4, 10));
         //PoiMergeCellUtil.mergeCells(workbook.getSheet("成果表"), 4, 4);
-        CellRangeAddress cellRangePlanNo = new CellRangeAddress(3, 13, 4, 10);
         //CellStyle cellStyle = workbook.createCellStyle();
         // 使用字符串定义格式
         //cellStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0.0"));
         // BuiltinFormats._formats 数组中的下标
         //cellStyle.setDataFormat((short) 1);
-        workbook.getSheetAt(0).addMergedRegion(cellRangePlanNo);
-        RegionUtil.setBorderBottom(BorderStyle.THIN, cellRangePlanNo, workbook.getSheetAt(0));
-        RegionUtil.setBorderLeft(BorderStyle.THIN, cellRangePlanNo, workbook.getSheetAt(0));
-        RegionUtil.setBorderRight(BorderStyle.THIN, cellRangePlanNo, workbook.getSheetAt(0));
-        RegionUtil.setBorderTop(BorderStyle.THIN, cellRangePlanNo, workbook.getSheetAt(0));
+        CellRangeAddress cellRangePlanNo = new CellRangeAddress(3, 13, 4, 10);
+        workbook.getSheet("Sheet1").addMergedRegion(cellRangePlanNo);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, cellRangePlanNo, workbook.getSheet("Sheet1"));
+        RegionUtil.setBorderLeft(BorderStyle.THIN, cellRangePlanNo, workbook.getSheet("Sheet1"));
+        RegionUtil.setBorderRight(BorderStyle.THIN, cellRangePlanNo, workbook.getSheet("Sheet1"));
+        RegionUtil.setBorderTop(BorderStyle.THIN, cellRangePlanNo, workbook.getSheet("Sheet1"));
         if (!savefile.exists()) {
             savefile.mkdirs();
         }
